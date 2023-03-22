@@ -1,37 +1,18 @@
 import { StandardWebSocketClient, WebSocketClient, WebSocketServer } from "https://deno.land/x/websocket@v0.1.4/mod.ts";
-import { ClientComEndpoint, ComEndpoint, ServerComEndpoint } from "./com_endpoint.ts";
-import { awaitedExports, exports, RequestMessage, ResponseMessage } from "./types.d.ts";
+import { ClientComEndpoint, ServerComEndpoint } from "./com_endpoint.ts";
+import type { RequestMessage, ResponseMessage } from "./types.d.ts";
 import { getAvailablePort } from "https://deno.land/x/port@1.0.0/mod.ts"
+import { Bridge } from "./bridge.ts";
 
-export class NodeBridge {
+export class NodeBridge extends Bridge {
+	clientClass = DenoClient;
+	serverClass = DenoServer
 
-	static exports: exports = {};
-
-	public static export<T extends exports>(exp:T): awaitedExports<T> {
-		Object.assign(this.exports, exp);
-		return exp;
-	}
-	
-	public static async connect<T extends exports>(path: URL): Promise<T> {
-		const isClient = Deno.args[1];
-		const comEndpoint = isClient ?
-			new DenoClient(Number(Deno.args[1]), path) :
-			new DenoServer(await this.getAvailablePort(), path);
-
-		comEndpoint.handleRequest = req => {
-			if (this.exports[req.name]) return this.exports[req.name](...req.data);
-			else throw new Error("export " + req.name + " does not exist");
-		}
-
-		return <T>await comEndpoint.getProxy();
-	}
-
-	private static async getAvailablePort(){
+	async getAvailablePort(){
 		const port = await getAvailablePort();
 		if (port == undefined) throw new Error("No available port found");
 		return port;
 	}
-
 }
 
 

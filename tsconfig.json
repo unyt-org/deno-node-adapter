@@ -1,10 +1,12 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "ESNext",
+		"moduleResolution": "nodenext",
 		"target": "es2020",
-		"lib": ["es2020"],
+		"lib": ["es2020", "DOM"],
 		"sourceMap": false,
 		"strict": true,
+		"allowImportingTsExtensions": true,
 		"rootDir": "./deno",
 	},
 	"exclude": ["node_modules", ".vscode-test"],

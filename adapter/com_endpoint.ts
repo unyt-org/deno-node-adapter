@@ -1,4 +1,4 @@
-import { RequestMessage, ResponseMessage } from "./types.d.ts";
+import type { RequestMessage, ResponseMessage } from "./types.d.ts";
 
 export abstract class ComEndpoint {
 	protected port: number

@@ -1,36 +1,17 @@
 import { ClientComEndpoint, ComEndpoint, ServerComEndpoint } from "./com_endpoint.ts";
-import { exports, awaitedExports, RequestMessage, ResponseMessage } from "./types.d.ts";
+import type { exports, awaitedExports, RequestMessage, ResponseMessage } from "./types.d.ts";
 import { WebSocketServer } from 'ws';
 import * as cp from "child_process";
+import { Bridge } from "./bridge.ts";
 
 
-export class DenoBridge {
+export class DenoBridge extends Bridge {
 
-	static exports: exports = {};
+	clientClass = NodeClient;
+	serverClass = NodeServer
 
-	public static export<T extends exports>(exp:T): awaitedExports<T> {
-		Object.assign(this.exports, exp);
-		return exp;
-	}
-
-	public static async connect<T extends exports>(path: URL): Promise<T> {
-		const isClient = Deno.args[1];
-		const comEndpoint = isClient ?
-			new NodeClient(Number(Deno.args[1]), path) :
-			new NodeServer(await this.getAvailablePort(), path);
-
-		comEndpoint.handleRequest = req => {
-			if (this.exports[req.name]) return this.exports[req.name](...req.data);
-			else throw new Error("export " + req.name + " does not exist");
-		}
-
-		return <T> await comEndpoint.getProxy();
-	}
-
-	private static async getAvailablePort(){
-		const port = await getAvailablePort();
-		if (port == undefined) throw new Error("No available port found");
-		return port;
+	getAvailablePort(){
+		return -1;
 	}
 
 }
