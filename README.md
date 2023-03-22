@@ -27,11 +27,11 @@ Deno supports this out of the box - for node, the [ts-node](https://www.npmjs.co
 The project can either be started from deno or from node.
 
 Deno:
-```typescript
+```bash
 deno run -Aq deno/main.ts
 ```
 Node:
-```typescript
+```bash
 ts-node node/main.ts
 ```
 
