@@ -1,4 +1,11 @@
 {
+	"ts-node": {
+		// It is faster to skip typechecking.
+		// Remove if you want ts-node to do typechecking.
+		"transpileOnly": true,
+		"esm": true
+	},
+
 	"compilerOptions": {
 		"module": "ESNext",
 		"moduleResolution": "nodenext",
@@ -6,8 +13,8 @@
 		"lib": ["es2020", "DOM"],
 		"sourceMap": false,
 		"strict": true,
-		"allowImportingTsExtensions": true,
 		"rootDir": "./deno",
 	},
+
 	"exclude": ["node_modules", ".vscode-test"],
 }

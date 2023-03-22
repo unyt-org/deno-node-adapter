@@ -1,13 +1,15 @@
-import { NodeBridge } from "../adapter/deno.ts";
+import "../bridge/enable.ts";
 
-const bridge = new NodeBridge()
+export function calculateDifferenceOnDeno(a: number,b: number) {
+	return a - b
+}
 
-export const denoExports = bridge.export({
-	hello(a:number) {
-		return 1
-	}
-})
+export function helloFromDeno() {
+	return "hello from deno"
+}
 
-const node = await bridge.connect<typeof import("../node/main.ts").nodeExports>(new URL('../node/main.ts', import.meta.url));
-node.helloCallOnNode(3)
-console.log("node",node)
+
+const { calculateSumOnNode, helloFromNode } = await importFromNode<typeof import('../node/main.ts')>('../node/main.ts');
+const { method1 } = await importFromNode<typeof import('../node/lib.ts')>('../node/lib.ts');
+
+console.log("called on node", await calculateSumOnNode(10,5), await helloFromNode(), await method1())

@@ -1,13 +1,14 @@
-import { DenoBridge } from "../adapter/node.ts";
+import "../bridge/enable.ts";
 
-const bridge = new DenoBridge()
+export function calculateSumOnNode(a: number, b: number) {
+	return a + b
+}
+export function helloFromNode() {
+	return "hello from node"
+}
 
-export const nodeExports = bridge.export({
-	helloCallOnNode(a:number) {
-		return 1
-	}
-})
-
-const deno = await bridge.connect<typeof import("../deno/main.ts").denoExports>(new URL('file://../deno/main.ts'));
-deno.hello(3)
-
+// must be called as IIFE because two top level awaits with cross-realm imports that import each other create a deadlock...
+(async ()=>{
+	const { calculateDifferenceOnDeno, helloFromDeno } = await importFromDeno<typeof import('../deno/main.ts')>('../deno/main.ts');
+	console.log("called on deno", await calculateDifferenceOnDeno(10,5), await helloFromDeno())
+})()
