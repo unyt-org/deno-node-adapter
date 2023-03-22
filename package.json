@@ -1,0 +1,14 @@
+{
+	"name": "@deno/my-example-app",
+	"description": "An example app created with Deno",
+	"type": "module",
+	"scripts": {
+	  "say-hello": "cowsay 'Hello from deno!'"
+	},
+	"dependencies": {
+	  "chalk": "^5.2"
+	},
+	"devDependencies": {
+	  "cowsay": "^1.5"
+	}
+  }
