@@ -1,30 +1,30 @@
 # Deno - Node.js Cross-Realm Imports
 
-This library enables dynamic cross-realm imports between a deno and a node process.
-It can be used for projects where both Node.js and deno specific features are required.
+This library enables dynamic cross-realm imports between a Deno and a Node.js process.
+It can be used for projects where both Node.js and Deno specific features are required.
 
 # Setup
 
-In this project setup, the example modules intended to run with deno are located in the `deno/` directory,
-modules for node.js are located in the `node/` directory.
+In this project setup, the example modules intended to run with Deno are located in the `deno/` directory,
+modules for Node.js are located in the `node/` directory.
 
 The bridge library is located in the `bridge/` directory.
-Additionally, there are configuration files for deno (`deno.json`, `importmap.dev.json`) and node (`package.json`, `tsconfig.json`).
+Additionally, there are configuration files for Deno (`deno.json`, `importmap.dev.json`) and Node.js (`package.json`, `tsconfig.json`).
 
-The modules are written as deno-compatible modules (using `.ts` extensions, ES6 imports).
+The modules are written as Deno-compatible modules (using `.ts` extensions, ES6 imports).
 
 ## Imports in Node.js
 
-The node.js modules also support classic npm modules (for correct type checking, the d.ts. files for the
+The Node.js modules also support classic npm modules (for correct type checking, the d.ts. files for the
 modules might have to be added to the import map).
-HTTPS imports are still experimental in node.js and don't necessarily work as intended.
+HTTPS imports are still experimental in Node.js and don't necessarily work as intended.
 
 ## Running the Project
 
 This setup is targeted for a direct typescript execution without explicit transpilation.
-Deno supports this out of the box - for node, the [ts-node](https://www.npmjs.com/package/ts-node) utility has to be installed (`npm i ts-node`).
+Deno supports this out of the box - for Node.js, the [ts-node](https://www.npmjs.com/package/ts-node) utility has to be installed (`npm i ts-node`).
 
-The project can either be started from deno or from node.
+The project can either be started from Deno or from Node.js.
 
 Deno:
 ```bash
@@ -61,7 +61,7 @@ Typechecking is also supported, but the module has to be explicitly specified wi
 const { hello } = await importFromDeno<typeof import('../deno.ts')>('../deno.ts');
 ```
 
-Similarly, a node module can export functions that can be imported from a deno module:
+Similarly, a node module can export functions that can be imported from a Deno module:
 
 ```typescript
 // file node.ts
@@ -90,7 +90,7 @@ In this case, the bridge api can also be directly accessed.
 
 With `bridge.export()`, JSON-compatible methods can be defined and consequently called by the other process.
 ```typescript
-// create a bridge from the deno process to the node process
+// create a bridge from the Deno process to the node process
 import { nodeBridge } from "../adapter/deno.ts";
 
 // define the exports available to the node process
@@ -107,7 +107,7 @@ export const denoExports = nodeBridge.export({
 })
 ```
 
-Calling the `bridge.connect()` method with a file path to the respective other module launches the corresponding deno or node process and
+Calling the `bridge.connect()` method with a file path to the respective other module launches the corresponding Deno or Node.js process and
 establishes a WebSocket connection between the two process.
 
 By setting the generic parameter for the `bridge.connect()` method, type checking for the exports can also be used:
@@ -118,7 +118,7 @@ const exportsFromNode = await nodeBridge.connect<typeof import('../node/main.ts'
 ## Custom Spawn Commands
 
 
-Per default, node processes are started with `ts-node -T --esm` and deno processes are 
+Per default, node processes are started with `ts-node -T --esm` and Deno processes are 
 started with `deno run -Aq`.
 
 This run command can be customized with the `bridge.spawnCommand` property.
@@ -135,7 +135,7 @@ nodeBridge.spawnCommand = ['node'];
 // file nodeModule.ts
 import { denoBridge } from "../bridge/node.ts";
 
-denoBridge.spawnCommand = ['deno', '--reload'];
+denoBridge.spawnCommand = ['deno', 'run', '--reload'];
 ```
 
 
